@@ -1,0 +1,19 @@
+{
+  "name": "nodestudy",
+  "version": "1.0.0",
+  "description": "node初步探究",
+  "main": "server.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "mime": "^1.3.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "zwj",
+  "license": "ISC"
+}

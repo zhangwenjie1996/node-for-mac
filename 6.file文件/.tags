@@ -1,0 +1,18 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	0	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+fs	/Users/zwj/node学习/6.读取文件/1.read.js	/^var fs = require('fs');$/;"	variable	line:2
+path	/Users/zwj/node学习/6.读取文件/1.read.js	/^var path = require("path");$/;"	variable	line:3
+afterRead	/Users/zwj/node学习/6.读取文件/1.read.js	/^function afterRead(err, data) {$/;"	function	line:5
+afterRead	/Users/zwj/node学习/6.读取文件/1.read.js	/^function afterRead(err, data) {$/;"	function	line:5
+fs	/Users/zwj/node学习/6.读取文件/2.同步read.js	/^var fs = require('fs');$/;"	variable	line:2
+path	/Users/zwj/node学习/6.读取文件/2.同步read.js	/^var path = require("path");$/;"	variable	line:3
+fs	/Users/zwj/node学习/6.读取文件/3.读取多个文件all.js	/^var fs = require('fs');$/;"	variable	line:1
+path	/Users/zwj/node学习/6.读取文件/3.读取多个文件all.js	/^var path = require('path');$/;"	variable	line:2
+show	/Users/zwj/node学习/6.读取文件/3.读取多个文件all.js	/^function show() {$/;"	function	line:25
+show	/Users/zwj/node学习/6.读取文件/3.读取多个文件all.js	/^function show() {$/;"	function	line:25
+fs	/Users/zwj/node学习/6.读取文件/4.writeFile.js	/^var fs = require('fs');$/;"	variable	line:2
+path	/Users/zwj/node学习/6.读取文件/4.writeFile.js	/^var path = require('path');$/;"	variable	line:3

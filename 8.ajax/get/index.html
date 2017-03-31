@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>title</title>
+</head>
+
+<body>
+    <ul id='content'>
+
+    </ul>
+</body>
+<script>
+    var xhr = new XMLHttpRequest;
+    xhr.open('GET', 'books.json', true);
+    xhr.responseType='json';//写过类型为json就不能获取xhr.responseText属性了
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == xhr.DONE && /2\d{2}/.test(xhr.status)) {
+            // 获取所有响应头
+            console.log(xhr.getAllResponseHeaders());
+            // 获取指定响应头
+            console.log(xhr.getResponseHeader('Content-Type'));
+            console.log(xhr.statusText,xhr.response);
+            // console.log(xhr.responseText);
+            var books=xhr.response;
+            var content=document.querySelector('#content');
+            for(var i=0;i<books.length;i++){
+              var li=document.createElement('li');
+              li.innerHTML=books[i].name;
+              content.appendChild(li);
+            }
+            // document.querySelector('#content').innerHTML=xhr.responseText;
+        }
+    }
+    xhr.send();
+</script>
+
+</html>

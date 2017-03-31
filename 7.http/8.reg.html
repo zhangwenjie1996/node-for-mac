@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    用户名：<input type="text" name="username"> 密码：
+    <input type="text" name="age">
+    <input type="button" value="注册" onclick="reg()">
+
+    <table>
+        <thead>
+            <th>name</th>
+            <th>age</th>
+        </thead>
+        <tbody></tbody>
+
+    </table>
+
+    <script>
+        function reg() {
+            var uername = document.querySelector('input[name="username"]').value;
+            var age = document.querySelector('input[name="age"]').value;
+            var user = {
+                username: uername,
+                age: age
+            }
+            // 创建ajax对象
+            var xhr = new XMLHttpRequest();
+            // 指定参数
+            xhr.open('POST', '/reg', true);
+            // 设置响应类型，会自动化xhr.response转成对应的类型
+            xhr.responseType = 'json';
+            xhr.onreadystatechange = function () {
+                console.log(xhr.readyState);
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        var users = xhr.response;//设置的响应类型是json，所以xhr.response为json对象
+                        var tbody = document.querySelector('table tbody'),
+                            tr = document.createElement('tr'),
+                            td1 = document.createElement('td');
+                        td1.innerHTML = users.username;
+                        td2 = document.createElement('td');
+                        td2.innerHTML = users.age;
+                        tr.appendChild(td1);
+                        tr.appendChild(td2);
+                        tbody.appendChild(tr);
+                    } else {
+
+                    }
+                }
+            }
+            // 指定请求体发送数据
+            xhr.send(JSON.stringify(user));
+        }
+    </script>
+</body>
+
+</html>
