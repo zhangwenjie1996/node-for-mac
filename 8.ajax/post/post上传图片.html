@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>title</title>
+</head>
+
+<body>
+  <!--在使用包含*文件*上传控件的表单时,enctype="multipart/form-data"必须使用该值-->
+  <form action="" name="userform" method='post' enctype="multipart/form-data">
+    用户名：<input type="text" name="username" /> 密码： <input type="text" name="password" />
+    <!-- 头像图片是二进制的 ，所以很难序列化为字符串所以下面的序列化字符串方法行不通 -->
+    头像：<input type="file" name='avatar' />
+    <input type="button" id="regBtn" value="注册" />
+
+  </form>
+</body>
+<script>
+  window.onload = function () {
+    document.querySelector('#regBtn').addEventListener('click', function () {
+      var xhr = new XMLHttpRequest;
+      xhr.open('POST', '/reg2', true);
+      xhr.responseType = 'text'; //写过类型为json就不能获取xhr.responseText属性了
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == xhr.DONE && /2\d{2}/.test(xhr.status)) {
+          console.log(xhr.response)
+        }
+      };
+      // new FormData();h5新增方法
+      var formData = new FormData();
+      formData.append('username', document.querySelector('input[name=username]').value);
+      formData.append('password', document.querySelector('input[name=password]').value);
+      var avatar = document.querySelector('input[name=avatar]');
+      formData.append('avatar', avatar.files[0]);
+      // 把数据放在请求体里，发送给服务器
+      xhr.send(formData);
+      return false;
+    })
+  }
+</script>
+
+</html>

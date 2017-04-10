@@ -2,59 +2,89 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>title</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>title</title>
 </head>
 
 <body>
+  <!--onSubmit='return false'可以阻止submit提交刷新，阻止了submit的刷新提交，也就不会是请求数据的序列化拼接到url后面了而是放在了请求体中-->
   <form action="" name="userform">
-    <input type="text" name="username"/>
-  <input type="text" name="password"/>
-  <input type="button" id="regBtn" value="注册"/>
+    用户名：<input type="text" name="username" /> 密码： <input type="text" name="password" />
+    <!-- type = "submit" 用在表单内,里面有类似的默认方法封装,普通单击就是提交所在表单
+type = "button" 就是说这个是个普通的按钮,如果不写单击等事件,那么这个按钮点击是没有任何反应的,所有事件都需要自己手动写
+return false;阻止submit自动提交
+-->
+    <!--submit提交时候， 只有当提交form表单并且是get请求的时候，浏览器才会把表单进行序列化拼到url后面，button提交不会序列化拼接,
+button提交post请求参数是在请求体中,submit提交post请求也是刷新页面序列化的拼接（可以onSubmit='return false'阻止submit提交刷新）
+-->
+    <!-- <input type="submit" id="regBtn" value="注册"/> -->
+    <input type="button" id="regBtn" value="注册" />
 
   </form>
-</body>
-<script>
-
-function serialize(form){
-  //
-  var elements = Array.prototype.slice.call(form.elements);
-  var data = [];
-   elements.forEach(function(element){
-     var type = element.type;
-     switch(type){
-       case 'submit':
-       case 'cancel':
-       case 'reset':
-       break;
-       case 'text':
-       data.push(element.name+"="+element.value);
-     }
-   })
-
-   return data.join("&");
-}
-
-window.onload=function(){
-  document.querySelector('#regBtn').addEventListener('click',function(){
-alert(1);
-     var xhr = new XMLHttpRequest;
-    xhr.open('POST', 'books.json', true);
-    xhr.responseType='json';//写过类型为json就不能获取xhr.responseText属性了
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == xhr.DONE && /2\d{2}/.test(xhr.status)) {
-
+  <script>
+    function serialize(form) {
+      //
+      var elements = Array.prototype.slice.call(form.elements);
+      var data = [];
+      elements.forEach(function (element) {
+        var type = element.type;
+        switch (type) {
+          case 'submit':
+          case 'cancel':
+          case 'reset':
+            break;
+          case 'text':
+            data.push(element.name + "=" + element.value);
         }
-    }
-    var data=serialize(document.querySelector('form'));
-    console.log(data);
-    xhr.send(data);
-    return false;
-})
-}
+      })
 
-</script>
+      return data.join("&");
+    }
+
+    function toJson(form) {
+      var elements = Array.prototype.slice.call(form.elements);
+      var data = {};
+      elements.forEach(function (element) {
+        var type = element.type;
+        switch (type) {
+          case 'submit':
+          case 'cancel':
+          case 'reset':
+            break;
+          case 'text':
+            data[element.name] = element.value;
+        }
+      })
+
+      return data;
+    }
+
+    window.onload = function () {
+      document.querySelector('#regBtn').addEventListener('click', function () {
+        var xhr = new XMLHttpRequest;
+        xhr.open('POST', '/reg', true);
+        xhr.responseType = 'text'; //写过类型为json就不能获取xhr.responseText属性了
+        // xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');// 对应serialize查询字符串类型的data
+        xhr.setRequestHeader('Content-Type', 'application/json'); // 对应tojson类型的字符串json 
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == xhr.DONE && /2\d{2}/.test(xhr.status)) {
+            console.log(xhr.response)
+          }
+        }
+        // 把表单值查询字符串
+        // var data=serialize(document.querySelector('form'));
+        // 把数据放在请求体里，发送给服务器
+        // xhr.send(data);
+
+        var data = toJson(document.querySelector('form'));
+        console.log(data);
+        xhr.send(JSON.stringify(data));
+        return false;
+      })
+    }
+  </script>
+</body>
 
 </html>
