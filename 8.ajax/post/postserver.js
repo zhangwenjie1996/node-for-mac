@@ -2,49 +2,20 @@ var http = require('http');
 var url = require('url');
 var fs = require('fs');
 var path = require('path');
-// querystring.parse(str, [sep], [eq], [options])
-// 将字符串转成对象。说白了其实就是把url上带的参数串转成数组对象。（看例子就知道咯）
-// 语法：
-// querystring.parse(str, [sep], [eq], [options])
-// 接收参数：
-// str                                         欲转换的字符串
-// sep                                       设置分隔符，默认为 ‘&'
-// eq                                         设置赋值符，默认为 ‘='
-// [options]  maxKeys             可接受字符串的最大长度，默认为1000
-// 例子：
-// querystring.parse('foo=bar&baz=qux&baz=quux&corge')
-// // returns
-// { foo: 'bar', baz: ['qux', 'quux'], corge: '' }
-
-// querystring.stringify(obj, [sep], [eq])
-// 将对象转换成字符串，字符串里多个参数将用 ‘&' 分隔，将用 ‘=' 赋值。
-// 这个函数的操作和 querystring.parse() 是相反的，具体可以看一下例子就了解了。
-// 语法：
-// querystring.stringify(obj, [sep], [eq])
-// 接收参数：
-// obj                                         欲转换的对象
-// sep                                        设置分隔符，默认为 ‘&'
-// eq                                          设置赋值符，默认为 ‘='
-// 例子：
-// querystring.stringify({ foo: 'bar', baz: ['qux', 'quux'], corge: '' })
-// // returns
-// 'foo=bar&baz=qux&baz=quux&corge='
-//
-// querystring.stringify({foo: 'bar', baz: 'qux'}, ';', ':')
-// // returns
-// 'foo:bar;baz:qux'
-
-
 var querystring = require('querystring');
 // 第三方模块 需要安装 npm i formidable
+// formidable模块解析复杂的文件内容，实现了上传和编码图片和视频。它支持GB级上传数据处理，支持多种客户端数据提交。有极高的测试覆盖率，非常适合在生产环境中使用。
 var formidable = require('formidable');
+var mime = require('mime');
+var util = require('util');
 // 只有当提交form表单并且是get请求的时候，浏览器才会把表单进行序列化拼到url后面
 http.createServer(function (req, res) {
     // 一定会返回一个对象
     var urlobj = url.parse(req.url, true);
     var pathname = urlobj.pathname;
+    console.log('pathname',urlobj,"===",pathname)
     if (pathname == '/') {
-        fs.readFile(path.join(__dirname, './post上传图片.html'), 'utf8', function (err, data) {
+        fs.readFile(path.join(__dirname, './post文件上传.html'), 'utf8', function (err, data) {
             res.end(data);
         });
     } else if (pathname == '/reg') {
@@ -71,13 +42,59 @@ http.createServer(function (req, res) {
         });
     } else if (pathname == '/reg2') {
         // res.end('reg2');
+        // 构建一个解析器
+        var form = new formidable.IncomingForm();
+        // 用解析器解析请求体
+        // 把非file的input放在fileds里
+        // 把文件类型的元素放在files里
+        form.parse(req, function (err, fields, files) {
+            // res.write('received upload:\n\n');   
+            // res.end(util.inspect({
+            //     fields: fields,
+            //     files: files
+            // }));
+            fs.readFile(files.avatar.path, function (err, data) {
+                var filename = path.join(__dirname, 'imgs/' + files.avatar.name);
+                fs.writeFile(filename, data, function (err) {
+                    res.writeHead(200, {
+                        'content-type': 'text/plain'
+                    });
+                    res.end('/imgs/' + files.avatar.name);
+                })
+            })
 
-         var form = new formidable.IncomingForm();
+            // util.inspect({ fields: fields,files: files}输出：
+            // { fields: { username: 'zwj', password: '123' },
+            //   files: 
+            //    { avatar: 
+            //       File {
+            //         domain: null,
+            //         _events: {},
+            //         _eventsCount: 0,
+            //         _maxListeners: undefined,
+            //         size: 5686,
+            //         path: '/var/folders/wg/9nd1d60j2kdf9gkrytbk2mdm0000gn/T/upload_cdc8dadba8e6f98ab31826565fdc5b7c',
+            //         name: 'favicon.ico',
+            //         type: 'image/vnd.microsoft.icon',
+            //         hash: null,
+            //         lastModifiedDate: 2017-04-12T13:06:49.253Z,
+            //         _writeStream: [Object] } } }
 
-    form.parse(req, function(err, fields, files) {
-      res.writeHead(200, {'content-type': 'text/plain'});
-      res.write('received upload:\n\n');
-      res.end(util.inspect({fields: fields, files: files}));
-    });
+         
+        });
+    } else {
+        fs.exists(path.join(__dirname, pathname), function (exists) {
+                console.log(path.join(__dirname, pathname),'==',path.join(__dirname),'++',pathname);
+            
+            if (exists) {
+                res.setHeader('Content-Type', mime.lookup(path.join(__dirname, pathname)))
+                fs.readFile(path.join(__dirname, pathname), function (err, data) {
+                    res.end(data);
+                })
+            } else {
+                res.statusCode = 404;
+                res.end('404');
+            }
+        })
     }
 }).listen(8888);
