@@ -36,11 +36,15 @@
             xhr.open('POST', '/reg', true);
             // 设置响应类型，会自动化xhr.response转成对应的类型
             xhr.responseType = 'json';
+            // onreadystatechange只是定义当xhr对象的状态改变时，要触发的函数。
+            // 只有先定义了，才能在状态改变时触发。
+            // 我们假设一种很极端的情况。
+            // 比如AJAX请求速度非常之快，快到还来不及反应变化，快到send发送之后还没执行下面的xhr.onreadystatechange = callback，那不就是不能触发callback了吗？
             xhr.onreadystatechange = function () {
                 console.log(xhr.readyState);
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
-                        var users = xhr.response;//设置的响应类型是json，所以xhr.response为json对象
+                        var users = xhr.response; //设置的响应类型是json，所以xhr.response为json对象
                         var tbody = document.querySelector('table tbody'),
                             tr = document.createElement('tr'),
                             td1 = document.createElement('td');
