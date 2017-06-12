@@ -16,3 +16,14 @@
 - setTimeout
 - setImmediate
 
+#### unit
+> util.inherits(constructor, superConstructor) 是一个实现对象间原型继承的函数。 JavaScript的面向对象特性是基于原型的，与常见的基于类的不同。JavaScript没有提供对象集成的语言级别特性，而是通过原型复制来实现的
+
+- 子类仅仅继承了父类在原型中定义的函数
+- 要想继承私有的，用call
+
+#### process(也是global下的一个属性)
+- cwd
+- chdir
+- memoryUsage
+
